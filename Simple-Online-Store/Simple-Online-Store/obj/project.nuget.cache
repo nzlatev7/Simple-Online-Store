@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "AzKVz6EIbmBzvFkydJ1rPuMDoD5DvzHruJ079gaL8MI/pimiWuSIK9R8cfP0PqiUnLNrh2m6lMuSofsVG/P5vw==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\PC\\Documents\\c# uroci\\Simple-Online-Store\\Simple-Online-Store\\Simple-Online-Store\\Simple-Online-Store.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\PC\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\3.1.21\\microsoft.netcore.app.host.win-x64.3.1.21.nupkg.sha512"
+  ],
+  "logs": []
+}
