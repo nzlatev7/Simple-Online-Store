@@ -1,10 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
-namespace Simple_Online_Store
+namespace Online_Store
 {
-    class ShoppingCard
+    public class ShoppingCard
     {
+        public ShoppingCard()
+        {
+            Items = new List<Item>();
+        }
+        public List<Item> Items { get; set; }
     }
 }
