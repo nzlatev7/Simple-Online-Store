@@ -44,7 +44,7 @@ namespace Online_Store
 
         public override decimal CostOfShoppingCard()
         {
-            decimal cost = ShoppingCard.Items.Sum(x => x.Price) * DiscountPercentage / 100;
+            decimal cost = ShoppingCard.Items.Sum(x => x.Price) - ShoppingCard.Items.Sum(x => x.Price) * DiscountPercentage / 100;
             return cost;
         }
     }
