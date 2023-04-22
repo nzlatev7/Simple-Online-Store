@@ -30,6 +30,7 @@ namespace Online_Store
                 Console.WriteLine($"{item.Key}. {items[item.Key].Name}, {items[item.Key].Description}, {items[item.Key].Price}");
             }
         }
+        //here is a method with the same name -> overload -> Polymorphism
         public void PrintItems(List<Item> items)
         {
             int i = 1;
