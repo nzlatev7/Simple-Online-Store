@@ -20,6 +20,7 @@ namespace Online_Store
 
 
             // if the user have promoCode and it is correct-> this is a premium Customer
+            Console.Write("Type promo code if you have: ");
             string promoCode = Console.ReadLine();
 
             // if the promo code is "premium" this will retun true
@@ -104,7 +105,7 @@ namespace Online_Store
                     {
                         cost = customer.CostOfShoppingCard();
                     }
-                    Console.WriteLine(cost);
+                    Console.WriteLine($"Your cost: ${cost}");
                 }
 
                 //search for items by name
@@ -167,7 +168,19 @@ namespace Online_Store
 
             //when we end with shopping, the items go through a checkout process
             Checkout checkout = new Checkout();
-            decimal totalCost = checkout.CalculateTotalCost(customer.ShoppingCard.Items);
+
+            decimal totalCost;
+            if (isHavingPromoCode)
+            {
+                //when the customer is premium the method accepts discount
+                totalCost = checkout.CalculateTotalCost(premiumCustomer.ShoppingCard.Items, premiumCustomer.DiscountPercentage);
+            }
+            else
+            {
+                totalCost = checkout.CalculateTotalCost(customer.ShoppingCard.Items);
+            }
+
+            Console.WriteLine($"Your total cost is {totalCost}");
 
             if (totalCost <= customer.Money)
             {
