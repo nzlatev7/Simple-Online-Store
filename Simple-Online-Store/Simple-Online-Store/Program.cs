@@ -18,8 +18,17 @@ namespace Online_Store
             //create a premium customer, the main change here is the discount percent
             PremiumCustomer premiumCustomer = new PremiumCustomer("Pesho", 22, 12000, 10);
 
+
+            // if the user have promoCode and it is correct-> this is a premium Customer
+            string promoCode = Console.ReadLine();
+
+            // if the promo code is "premium" this will retun true
+            bool isHavingPromoCode = promoCode == "premium" ? true : false;     
+            
             //print the catalog of items
             catalog.PrintItems(items);
+
+            Console.Write("Type command: ");
 
             string command;
             while ((command = Console.ReadLine()) != "end with shopping")
@@ -34,7 +43,17 @@ namespace Online_Store
                     //add item
                     Item currentItemForAdding = items[index];
                     ShoppingCard shoppingCard = new ShoppingCard();
-                    customer.ShoppingCard.Items.Add(currentItemForAdding);
+
+                    // validate the user, add the items to the correct customer
+                    if (isHavingPromoCode)
+                    {
+                        premiumCustomer.ShoppingCard.Items.Add(currentItemForAdding);
+                    }
+                    else
+                    {
+                        customer.ShoppingCard.Items.Add(currentItemForAdding);
+                    }
+
 
                     //delete the item
                     items.Remove(index);
@@ -46,7 +65,25 @@ namespace Online_Store
                 //every customer can view their shopping card
                 else if (command == "view my shopping card")
                 {
-                    List<Item> myItems = customer.ViewMyShoppingCard();
+                    List<Item> myItems;
+
+                    // validate the user, return thr correct Items
+                    if (isHavingPromoCode)
+                    {
+                        // grap my items, premiumCustomer Items
+                        myItems = premiumCustomer.ViewMyShoppingCard();
+                    }
+                    else
+                    {
+                        // grap my items, customer Items
+                        myItems = customer.ViewMyShoppingCard();
+                    }
+                    
+                    if (myItems.Count == 0)
+                    {
+                        Console.WriteLine("Your shopping card is empty!");
+                        continue;
+                    }
 
                     // Here PrintItems is a method with the same name but print the List<Item>
                     // method overloading -> same name with different parameters
@@ -56,7 +93,17 @@ namespace Online_Store
                 //every customer can view their total cost of items in it
                 else if (command == "cost")
                 {
-                    decimal cost = customer.CostOfShoppingCard();
+                    decimal cost;
+
+                    // validate the user, return thr correct cost
+                    if (isHavingPromoCode)
+                    {
+                        cost = premiumCustomer.CostOfShoppingCard();
+                    }
+                    else
+                    {
+                        cost = customer.CostOfShoppingCard();
+                    }
                     Console.WriteLine(cost);
                 }
 
@@ -80,6 +127,42 @@ namespace Online_Store
                         Console.WriteLine($"{currentItem.Name}, {currentItem.Description}, {currentItem.Price}");
                     }
                 }
+
+                else if (command == "remove item")
+                {
+                    List<Item> myItems;
+
+                    // validate the user, return the correct Items
+                    if (isHavingPromoCode)
+                    {
+                        myItems = premiumCustomer.ViewMyShoppingCard();
+                    }
+                    else
+                    {
+                        myItems = customer.ViewMyShoppingCard();
+                    }
+                    
+                    catalog.PrintItems(myItems);
+
+                    // choosing an Item index
+                    Console.Write("Choose one of these items! Give an index: ");
+                    int index = int.Parse(Console.ReadLine());
+
+                    
+                    
+                    if (isHavingPromoCode)
+                    {
+                        // index - 1, because the program displays the indexes incremented by 1, and the array start from zero position
+                        premiumCustomer.ShoppingCard.Items.RemoveAt(index - 1);
+                    }
+                    else
+                    {
+                        // index - 1, because the program displays the indexes incremented by 1, and the array start from zero position
+                        customer.ShoppingCard.Items.RemoveAt(index - 1);
+                    }
+                }
+
+                Console.Write("Type command: ");
             }
 
             //when we end with shopping, the items go through a checkout process
