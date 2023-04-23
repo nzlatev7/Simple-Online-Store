@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Simple_Online_Store;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -8,9 +9,8 @@ namespace Online_Store
     {
         static void Main(string[] args)
         {
-
-            Catalog catalog = new Catalog();
-            var items = catalog.Items;
+            //all shooping items
+            Dictionary<int, Item> items = Catalog.Items;
 
             //create a customer
             Customer customer = new Customer("Nasko", 12, 200);
@@ -20,30 +20,28 @@ namespace Online_Store
 
 
             // if the user have promoCode and it is correct-> this is a premium Customer
-            Console.Write("Type promo code if you have: ");
+            StandardMessages.PromoCode();
             string promoCode = Console.ReadLine();
 
             // if the promo code is "premium" this will retun true
             bool isHavingPromoCode = promoCode == "premium" ? true : false;     
             
             //print the catalog of items
-            catalog.PrintItems(items);
+            Catalog.PrintItems(items);
 
-            Console.Write("Type command: ");
+            StandardMessages.TypeCommand();
 
             string command;
             while ((command = Console.ReadLine()) != "end with shopping")
             {
-
                 //add item
                 if (command == "add item")
                 {
-                    Console.Write("Choose one of these items! Give an index: ");
+                    StandardMessages.ChosingByIndex();
                     int index = int.Parse(Console.ReadLine());
 
                     //add item
                     Item currentItemForAdding = items[index];
-                    ShoppingCard shoppingCard = new ShoppingCard();
 
                     // validate the user, add the items to the correct customer
                     if (isHavingPromoCode)
@@ -60,7 +58,7 @@ namespace Online_Store
                     items.Remove(index);
 
                     //print the catalog of items
-                    catalog.PrintItems(items);
+                    Catalog.PrintItems(items);
                 }
 
                 //every customer can view their shopping card
@@ -82,13 +80,13 @@ namespace Online_Store
                     
                     if (myItems.Count == 0)
                     {
-                        Console.WriteLine("Your shopping card is empty!");
+                        StandardMessages.EmptyShoppingCard();
                         continue;
                     }
 
                     // Here PrintItems is a method with the same name but print the List<Item>
                     // method overloading -> same name with different parameters
-                    catalog.PrintItems(myItems);
+                    Catalog.PrintItems(myItems);
                 }
 
                 //every customer can view their total cost of items in it
@@ -105,7 +103,7 @@ namespace Online_Store
                     {
                         cost = customer.CostOfShoppingCard();
                     }
-                    Console.WriteLine($"Your cost: ${cost}");
+                    StandardMessages.DisplayCost(cost);
                 }
 
                 //search for items by name
@@ -118,14 +116,14 @@ namespace Online_Store
 
                     if (sameItems == null)
                     {
-                        Console.WriteLine("Item not found");
+                        StandardMessages.ItemNotFound();
                         continue;
                     }
 
                     //printing the duplicates
                     foreach (var currentItem in sameItems)
                     {
-                        Console.WriteLine($"{currentItem.Name}, {currentItem.Description}, {currentItem.Price}");
+                        Item.Print(currentItem);
                     }
                 }
 
@@ -143,14 +141,12 @@ namespace Online_Store
                         myItems = customer.ViewMyShoppingCard();
                     }
                     
-                    catalog.PrintItems(myItems);
+                    Catalog.PrintItems(myItems);
 
                     // choosing an Item index
-                    Console.Write("Choose one of these items! Give an index: ");
+                    StandardMessages.ChosingByIndex();
                     int index = int.Parse(Console.ReadLine());
 
-                    
-                    
                     if (isHavingPromoCode)
                     {
                         // index - 1, because the program displays the indexes incremented by 1, and the array start from zero position
@@ -163,33 +159,36 @@ namespace Online_Store
                     }
                 }
 
-                Console.Write("Type command: ");
+                StandardMessages.TypeCommand();
             }
 
-            //when we end with shopping, the items go through a checkout process
-            Checkout checkout = new Checkout();
+            //when we end with shopping, the items go through a checkout process, here we calulate the total cost
+            decimal totalCost = TotalCost(isHavingPromoCode, customer, premiumCustomer);
 
+            StandardMessages.TotalCost(totalCost);
+
+            if (totalCost <= customer.Money)
+            {
+                StandardMessages.EndSuccessful();
+            }
+            else
+            {
+                StandardMessages.DoNotHaveEnoughMoney();
+            }
+        }
+        static decimal TotalCost(bool isHavingPromoCode, Customer customer, PremiumCustomer premiumCustomer)
+        {
             decimal totalCost;
             if (isHavingPromoCode)
             {
                 //when the customer is premium the method accepts discount
-                totalCost = checkout.CalculateTotalCost(premiumCustomer.ShoppingCard.Items, premiumCustomer.DiscountPercentage);
+                totalCost = Checkout.CalculateTotalCost(premiumCustomer.ShoppingCard.Items, premiumCustomer.DiscountPercentage);
             }
             else
             {
-                totalCost = checkout.CalculateTotalCost(customer.ShoppingCard.Items);
+                totalCost = Checkout.CalculateTotalCost(customer.ShoppingCard.Items);
             }
-
-            Console.WriteLine($"Your total cost is {totalCost}");
-
-            if (totalCost <= customer.Money)
-            {
-                Console.WriteLine("Successful, have a nice day!");
-            }
-            else
-            {
-                Console.WriteLine("Don't have enough money!");
-            }
+            return totalCost;
         }
     }
 }
