@@ -42,5 +42,13 @@ namespace Simple_Online_Store
         {
             Console.WriteLine("Don't have enough money!");
         }
+        public static void Successfully(string operation)
+        {
+            Console.WriteLine($"Successfully {operation} it");
+        }
+        public static void InvalidCommand()
+        {
+            Console.WriteLine($"Invalid Command");
+        }
     }
 }
