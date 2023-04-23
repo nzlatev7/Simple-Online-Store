@@ -34,129 +34,30 @@ namespace Online_Store
             string command;
             while ((command = Console.ReadLine()) != "end with shopping")
             {
-                //add item
-                if (command == "add item")
+                switch (command)
                 {
-                    StandardMessages.ChosingByIndex();
-                    int index = int.Parse(Console.ReadLine());
+                    case "add item":
+                        AddItem(items, customer, premiumCustomer, isHavingPromoCode);
+                        break;
+                    case "view my shopping card":
+                        ViewShoppingCard(customer, premiumCustomer, isHavingPromoCode);
+                        break;
 
-                    //add item
-                    Item currentItemForAdding = items[index];
+                    // you can check your shopping card cost
+                    case "cost":
+                        Cost(customer, premiumCustomer, isHavingPromoCode);
+                        break;
 
-                    // validate the user, add the items to the correct customer
-                    if (isHavingPromoCode)
-                    {
-                        premiumCustomer.ShoppingCard.Items.Add(currentItemForAdding);
-                    }
-                    else
-                    {
-                        customer.ShoppingCard.Items.Add(currentItemForAdding);
-                    }
-
-
-                    //delete the item
-                    items.Remove(index);
-
-                    //print the catalog of items
-                    Catalog.PrintItems(items);
-                }
-
-                //every customer can view their shopping card
-                else if (command == "view my shopping card")
-                {
-                    List<Item> myItems;
-
-                    // validate the user, return thr correct Items
-                    if (isHavingPromoCode)
-                    {
-                        // grap my items, premiumCustomer Items
-                        myItems = premiumCustomer.ViewMyShoppingCard();
-                    }
-                    else
-                    {
-                        // grap my items, customer Items
-                        myItems = customer.ViewMyShoppingCard();
-                    }
-                    
-                    if (myItems.Count == 0)
-                    {
-                        StandardMessages.EmptyShoppingCard();
-                        continue;
-                    }
-
-                    // Here PrintItems is a method with the same name but print the List<Item>
-                    // method overloading -> same name with different parameters
-                    Catalog.PrintItems(myItems);
-                }
-
-                //every customer can view their total cost of items in it
-                else if (command == "cost")
-                {
-                    decimal cost;
-
-                    // validate the user, return thr correct cost
-                    if (isHavingPromoCode)
-                    {
-                        cost = premiumCustomer.CostOfShoppingCard();
-                    }
-                    else
-                    {
-                        cost = customer.CostOfShoppingCard();
-                    }
-                    StandardMessages.DisplayCost(cost);
-                }
-
-                //search for items by name
-                else if (command == "search")
-                {
-                    string item = Console.ReadLine();
-
-                    //check if the dictionary have items with name like item
-                    List<Item> sameItems = items.Select(x => x.Value).Where(x => x.Name == item).ToList();
-
-                    if (sameItems == null)
-                    {
-                        StandardMessages.ItemNotFound();
-                        continue;
-                    }
-
-                    //printing the duplicates
-                    foreach (var currentItem in sameItems)
-                    {
-                        Item.Print(currentItem);
-                    }
-                }
-
-                else if (command == "remove item")
-                {
-                    List<Item> myItems;
-
-                    // validate the user, return the correct Items
-                    if (isHavingPromoCode)
-                    {
-                        myItems = premiumCustomer.ViewMyShoppingCard();
-                    }
-                    else
-                    {
-                        myItems = customer.ViewMyShoppingCard();
-                    }
-                    
-                    Catalog.PrintItems(myItems);
-
-                    // choosing an Item index
-                    StandardMessages.ChosingByIndex();
-                    int index = int.Parse(Console.ReadLine());
-
-                    if (isHavingPromoCode)
-                    {
-                        // index - 1, because the program displays the indexes incremented by 1, and the array start from zero position
-                        premiumCustomer.ShoppingCard.Items.RemoveAt(index - 1);
-                    }
-                    else
-                    {
-                        // index - 1, because the program displays the indexes incremented by 1, and the array start from zero position
-                        customer.ShoppingCard.Items.RemoveAt(index - 1);
-                    }
+                    // with this you can search items by name
+                    case "search":
+                        SearchForItem(items, customer, premiumCustomer, isHavingPromoCode);
+                        break;
+                    case "remove item":
+                        RemoveItem(customer, premiumCustomer, isHavingPromoCode);
+                        break;
+                    default:
+                        StandardMessages.InvalidCommand();
+                        break;
                 }
 
                 StandardMessages.TypeCommand();
@@ -175,6 +76,129 @@ namespace Online_Store
             {
                 StandardMessages.DoNotHaveEnoughMoney();
             }
+        }
+        static void AddItem(Dictionary<int, Item> items, Customer customer, PremiumCustomer premiumCustomer, bool isHavingPromoCode)
+        {
+            StandardMessages.ChosingByIndex();
+            int index = int.Parse(Console.ReadLine());
+
+            //add item
+            Item currentItemForAdding = items[index];
+
+            // validate the user, add the items to the correct customer
+            if (isHavingPromoCode)
+            {
+                premiumCustomer.ShoppingCard.Items.Add(currentItemForAdding);
+            }
+            else
+            {
+                customer.ShoppingCard.Items.Add(currentItemForAdding);
+            }
+
+            StandardMessages.Successfully("add");
+
+            //delete the item
+            items.Remove(index);
+
+            //print the catalog of items
+            Catalog.PrintItems(items);
+        }
+        static void ViewShoppingCard(Customer customer, PremiumCustomer premiumCustomer, bool isHavingPromoCode)
+        {
+            List<Item> myItems;
+
+            // validate the user, return thr correct Items
+            if (isHavingPromoCode)
+            {
+                // grap my items, premiumCustomer Items
+                myItems = premiumCustomer.ViewMyShoppingCard();
+            }
+            else
+            {
+                // grap my items, customer Items
+                myItems = customer.ViewMyShoppingCard();
+            }
+
+            if (myItems.Count == 0)
+            {
+                StandardMessages.EmptyShoppingCard();
+            }
+            else
+            {
+                // Here PrintItems is a method with the same name but print the List<Item>
+                // method overloading -> same name with different parameters
+                Catalog.PrintItems(myItems);
+            }
+            
+        }
+        static void Cost(Customer customer, PremiumCustomer premiumCustomer, bool isHavingPromoCode)
+        {
+            decimal cost;
+
+            // validate the user, return thr correct cost
+            if (isHavingPromoCode)
+            {
+                cost = premiumCustomer.CostOfShoppingCard();
+            }
+            else
+            {
+                cost = customer.CostOfShoppingCard();
+            }
+            StandardMessages.DisplayCost(cost);
+        }
+        static void SearchForItem(Dictionary<int, Item> items, Customer customer, PremiumCustomer premiumCustomer, bool isHavingPromoCode)
+        {
+            string item = Console.ReadLine();
+
+            //check if the dictionary have items with name like item
+            List<Item> sameItems = items.Select(x => x.Value).Where(x => x.Name == item).ToList();
+
+            if (sameItems == null)
+            {
+                StandardMessages.ItemNotFound();
+            }
+            else
+            {
+                //printing the duplicates
+                foreach (var currentItem in sameItems)
+                {
+                    Item.Print(currentItem);
+                }
+            }
+            
+        }
+        static void RemoveItem(Customer customer, PremiumCustomer premiumCustomer, bool isHavingPromoCode)
+        {
+            List<Item> myItems;
+
+            // validate the user, return the correct Items
+            if (isHavingPromoCode)
+            {
+                myItems = premiumCustomer.ViewMyShoppingCard();
+            }
+            else
+            {
+                myItems = customer.ViewMyShoppingCard();
+            }
+
+            Catalog.PrintItems(myItems);
+
+            // choosing an Item index
+            StandardMessages.ChosingByIndex();
+            int index = int.Parse(Console.ReadLine());
+
+            if (isHavingPromoCode)
+            {
+                // index - 1, because the program displays the indexes incremented by 1, and the array start from zero position
+                premiumCustomer.ShoppingCard.Items.RemoveAt(index - 1);
+            }
+            else
+            {
+                // index - 1, because the program displays the indexes incremented by 1, and the array start from zero position
+                customer.ShoppingCard.Items.RemoveAt(index - 1);
+            }
+
+            StandardMessages.Successfully("remove");
         }
         static decimal TotalCost(bool isHavingPromoCode, Customer customer, PremiumCustomer premiumCustomer)
         {
