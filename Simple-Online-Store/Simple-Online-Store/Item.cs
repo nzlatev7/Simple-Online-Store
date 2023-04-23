@@ -1,4 +1,6 @@
-﻿namespace Online_Store
+﻿using System;
+
+namespace Online_Store
 {
     public class Item
     {
@@ -13,6 +15,11 @@
         public string Description { get; set; }
         public decimal Price { get; set; }
         public ItemCategory Category { get; set; }
+
+        public static void Print(Item item)
+        {
+            Console.WriteLine($"{item.Name}, {item.Description}, {item.Price}");
+        }
     }
     public enum ItemCategory
     {
