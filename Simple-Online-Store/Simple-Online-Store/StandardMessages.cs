@@ -44,7 +44,7 @@ namespace Simple_Online_Store
         }
         public static void Successfully(string operation)
         {
-            Console.WriteLine($"Successfully {operation} it");
+            Console.WriteLine($"Successfully {operation}ed");
         }
         public static void InvalidCommand()
         {
