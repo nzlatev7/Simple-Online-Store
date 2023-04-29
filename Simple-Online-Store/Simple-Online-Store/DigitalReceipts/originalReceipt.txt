@@ -1,0 +1,10 @@
+Digital Receipt
+
+{date}
+
+Simple Online Store
+
+Products: 
+{products}
+
+Total: ${totalSum}

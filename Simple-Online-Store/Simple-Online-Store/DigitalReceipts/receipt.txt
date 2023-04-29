@@ -1,0 +1,12 @@
+Digital Receipt
+
+10:45:07 
+
+Simple Online Store
+
+Products: 
+1.pijama, 1m i 20cm, 12.50
+2.mouse, the mouse has LED ligths, 17.50
+
+
+Total: $30.00
