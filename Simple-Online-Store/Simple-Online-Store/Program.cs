@@ -76,6 +76,10 @@ namespace Online_Store
             {
                 StandardMessages.DoNotHaveEnoughMoney();
             }
+
+            //receipt operation
+            DigitalReceipt digitalReceipt = new DigitalReceipt(customer, premiumCustomer, isHavingPromoCode);
+            digitalReceipt.Operation();
         }
         static void AddItem(Dictionary<int, Item> items, Customer customer, PremiumCustomer premiumCustomer, bool isHavingPromoCode)
         {
