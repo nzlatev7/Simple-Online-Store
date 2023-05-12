@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Simple_Online_Store
 {
-    public class StandardMessages
+    public static class StandardMessages
     {
         public static void PromoCode()
         {
